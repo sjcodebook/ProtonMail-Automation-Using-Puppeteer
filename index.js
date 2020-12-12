@@ -35,9 +35,14 @@ async function composeAndSendEmail(page, detail) {
   });
 
   await page.keyboard.press('Tab');
-  await page.keyboard.type(' ', {
+  await page.keyboard.type('___', {
     delay: getRandomInt(50, 100),
   });
+
+  await page.keyboard.down('Control');
+  await page.keyboard.press('KeyA');
+  await page.keyboard.up('Control');
+  await page.keyboard.up('Backspace');
 
   await page.keyboard.type(
     `I told you to do that this weekend. ${detail.name}`,
