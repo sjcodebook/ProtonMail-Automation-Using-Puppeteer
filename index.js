@@ -34,33 +34,31 @@ async function runAutomation() {
 
   page.click('.sidebar-btn-compose');
 
-  // const [response] = await Promise.all([
-  //   page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-  //   // page.waitForSelector('button[class=sidebar-btn-compose]'),
-  //   page.click('.sidebar-btn-compose'),
-  // ]);
+  await page.waitForSelector('.autocompleteEmails-input');
+  await page.type('.autocompleteEmails-input', 'webbrainsmedia@gmail.com', {
+    delay: 100,
+  });
 
-  // await page.waitForNavigation();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+  await page.keyboard.type('Hola this is important task.', { delay: 100 });
 
-  // const a = await page.$('.sidebar-btn-compose');
+  await page.keyboard.press('Tab');
+  await page.keyboard.type(' ', {
+    delay: 100,
+  });
+  await page.keyboard.type('I told you to do that this weekend.', {
+    delay: 100,
+  });
 
-  // console.log(a.value);
-  // console.log(a.innerText);
+  await page.waitForSelector('.composer-btn-send', {
+    visible: true,
+  });
 
-  // await page.$eval(
-  //   '.sidebar-btn-compose',
-  //   (el) => (el.value = '4h@dT@G9CawE22M')
-  // );
+  page.click('.composer-btn-send');
 
   await browser.waitForTarget(() => false);
 
-  // await page.click('input[type="submit"]');
-  // await page.waitForSelector('#mw-content-text');
-  // const text = await page.evaluate(() => {
-  //   const anchor = document.querySelector('#mw-content-text');
-  //   return anchor.textContent;
-  // });
-  // console.log(text);
   await browser.close();
 }
 
