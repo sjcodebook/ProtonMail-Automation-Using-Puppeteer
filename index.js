@@ -1,5 +1,62 @@
 require('dotenv').config();
 const puppeteer = require('puppeteer');
+const details = require('./details');
+
+function delay(time) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, time);
+  });
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+async function composeAndSendEmail(page, detail) {
+  await page.waitForSelector('.sidebar-btn-compose', {
+    visible: true,
+  });
+
+  await page.click('.sidebar-btn-compose');
+
+  await delay(getRandomInt(500, 1000));
+
+  await page.waitForSelector('.autocompleteEmails-input');
+  await page.type('.autocompleteEmails-input', detail.email, {
+    delay: getRandomInt(50, 100),
+  });
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+  await page.keyboard.type(`Hola ${detail.name} this is important task.`, {
+    delay: getRandomInt(50, 100),
+  });
+
+  await page.keyboard.press('Tab');
+  await page.keyboard.type(' ', {
+    delay: getRandomInt(50, 100),
+  });
+
+  await page.keyboard.type(
+    `I told you to do that this weekend. ${detail.name}`,
+    {
+      delay: getRandomInt(50, 100),
+    }
+  );
+
+  await delay(getRandomInt(1000, 1500));
+
+  await page.waitForSelector('.composer-btn-send', {
+    visible: true,
+  });
+  await page.click('.composer-btn-send');
+
+  await delay(getRandomInt(1500, 2000));
+
+  return Promise.resolve('done');
+}
 
 async function runAutomation() {
   const browser = await puppeteer.launch({ headless: false });
@@ -28,38 +85,18 @@ async function runAutomation() {
 
   await page.keyboard.press('Enter');
 
-  await page.waitForSelector('.sidebar-btn-compose', {
-    visible: true,
-  });
+  const doNextPromise = async (d) => {
+    composeAndSendEmail(page, details[d]).then(async (x) => {
+      d++;
+      if (d < details.length) {
+        await doNextPromise(d);
+      } else {
+        await browser.close();
+      }
+    });
+  };
 
-  page.click('.sidebar-btn-compose');
-
-  await page.waitForSelector('.autocompleteEmails-input');
-  await page.type('.autocompleteEmails-input', 'webbrainsmedia@gmail.com', {
-    delay: 100,
-  });
-
-  await page.keyboard.press('Enter');
-  await page.keyboard.press('Tab');
-  await page.keyboard.type('Hola this is important task.', { delay: 100 });
-
-  await page.keyboard.press('Tab');
-  await page.keyboard.type(' ', {
-    delay: 100,
-  });
-  await page.keyboard.type('I told you to do that this weekend.', {
-    delay: 100,
-  });
-
-  await page.waitForSelector('.composer-btn-send', {
-    visible: true,
-  });
-
-  page.click('.composer-btn-send');
-
-  await browser.waitForTarget(() => false);
-
-  await browser.close();
+  doNextPromise(0);
 }
 
 runAutomation();
