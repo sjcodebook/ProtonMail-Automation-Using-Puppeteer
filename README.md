@@ -1,6 +1,6 @@
 # ProtonMail-Automation-Using-Puppeteer
 
-## Steps to run the project=>
+## Steps to run the script=>
 
 1) clone the project
 2) Instal dependecies (npm i). It will take time as it will download the headless chrome browser
