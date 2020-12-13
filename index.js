@@ -24,13 +24,14 @@ async function composeAndSendEmail(page, detail) {
   await delay(getRandomInt(500, 1000));
 
   await page.waitForSelector('.autocompleteEmails-input');
+
   await page.type('.autocompleteEmails-input', detail.email, {
     delay: getRandomInt(50, 100),
   });
 
   await page.keyboard.press('Enter');
   await page.keyboard.press('Tab');
-  await page.keyboard.type(`Hola ${detail.name} this is important task.`, {
+  await page.keyboard.type(detail.subject, {
     delay: getRandomInt(50, 100),
   });
 
@@ -44,12 +45,9 @@ async function composeAndSendEmail(page, detail) {
   await page.keyboard.up('Control');
   await page.keyboard.up('Backspace');
 
-  await page.keyboard.type(
-    `I told you to do that this weekend. ${detail.name}`,
-    {
-      delay: getRandomInt(50, 100),
-    }
-  );
+  await page.keyboard.type(detail.message, {
+    delay: getRandomInt(50, 100),
+  });
 
   await delay(getRandomInt(1000, 1500));
 
