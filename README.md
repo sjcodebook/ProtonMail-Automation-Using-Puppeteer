@@ -9,3 +9,5 @@
 `PASSWORD=Your_Proton_Password`
 4) enter email data to be sent in `details.js` file
 5) start the script by running `npm start`
+
+![ProtonMail-Automation-Using-Puppeteer](https://media.giphy.com/media/KNNC4RliTrDd7iTMRS/giphy.gif)
